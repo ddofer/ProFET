@@ -1,0 +1,3 @@
+Both: Have SP and sequences are mature (SP cleaved)
+Pos - SP+ NPP . 90% ID
+Neg - SP+ (cleaved), no TMD? . 10% ID

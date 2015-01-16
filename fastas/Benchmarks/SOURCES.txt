@@ -1,0 +1,25 @@
+ccPDB - datasets + PDB
+http://crdd.osdd.net/raghava/ccpdb/collect.php
+(Includes RNA,DNA binding proteins dataset.. ->)
+
+    RNa-Binding Proteins (joined both sets - main (377X2) and indep (69, 100 pos,neg))
+    http://www.imtech.res.in/raghava/rnapred/download.html
+
+    DNA Binding : DNAbinder Alt set (Of proteins, not prot.chains; 1153 DNA-binding proteins and 1153 non DNA-binding proteins)
+    http://www.imtech.res.in/raghava/dnabinder/
+    (Their res: 72.42 Acc% , MCC 0.45)
+
+
+
+
+
+Unused:
+    "A unified multitask architecture for predicting local protein properties."
+    -> MultiTask-Noble
+    >http://noble.gs.washington.edu/proj/multitask/
+
+
+    "Artificial Neural Networks Trained to Detect Viral and Phage Structural Proteins"
+    -> Virii_Structure
+    http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3426561/
+

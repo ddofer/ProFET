@@ -1,0 +1,35 @@
+POSITIVES:
+1) A) "uniprot-NP_KW_.9"  .
+    keyword:527 AND length:[25 TO 1300] NOT annotation:(type:transmem) NOT keyword:"Transmembrane [KW-0812]" NOT fragment:yes
+    http://www.uniprot.org/uniprot/?query=keyword%3A527+AND+length%3A%5B25+TO+1300%5D+NOT+annotation%3A%28type%3Atransmem%29+NOT+keyword%3A%22Transmembrane+%5BKW-0812%5D%22+NOT+fragment%3Ayes+NOT+keyword%3A%22Receptor+%5BKW-0675%5D%22&sort=score
+887 results -> [0.9 id] -> 682
+    http://www.uniprot.org/uniref/?query=uniprot%3a(keyword%3a527+AND+length%3a%5b25+TO+1300%5d+NOT+annotation%3a(type%3atransmem)+NOT+keyword%3a%22Transmembrane+%5bKW-0812%5d%22+NOT+fragment%3ayes+NOT+keyword%3a%22Receptor+%5bKW-0675%5d%22)+identity:0.9
+
+1) B)
+(ALT) - 933 results -> [1.0 id] -> 888
+    http://www.uniprot.org/uniref/?query=uniprot%3A%28keyword%3A527+AND+length%3A%5B25+TO+1300%5D+NOT+annotation%3A%28type%3Atransmem%29+NOT+keyword%3A%22Transmembrane+%5BKW-0812%5D%22+NOT+fragment%3Ayes%29+identity%3A1.0&sort=score
+
+24.8.2014
+
+
+2) "propep_cleavage_SP+NP-KW_1.0"
+    ((((annotation:(type:propep) OR annotation:(type:signal) OR keyword:"Cleavage on pair of basic residues [KW-0165]") AND keyword:"Neuropeptide [KW-0527]"))) NOT annotation:(type:transmem)
+460 results (mostly reviewed)-> [1.0 id] -> 446
+    http://www.uniprot.org/uniref/?query=uniprot%3a(((((annotation%3a(type%3apropep)+OR+annotation%3a(type%3asignal)+OR+keyword%3a%22Cleavage+on+pair+of+basic+residues+%5bKW-0165%5d%22)+AND+keyword%3a%22Neuropeptide+%5bKW-0527%5d%22)))+NOT+annotation%3a(type%3atransmem))+identity:1.0
+24.8.2014
+
+
+
+3) Alt: http://www.cbs.dtu.dk/databases/propeptides/
+(out of date; 2004. Was analyzed with ProP)
+
+
+
+NEGATIVES:
+1) "NEG_simple_+SP_-TMD_0.5"
+http://www.uniprot.org/uniprot/?query=annotation%3A%28type%3Asignal+confidence%3Aexperimental%29+NOT+annotation%3A%28type%3Atransmem%29+NOT+keyword%3A%22Transmembrane+%5BKW-0812%5D%22+NOT+annotation%3A%28type%3Apropep%29++NOT+annotation%3A%28type%3Apeptide+confidence%3Aexperimental%29+NOT+keyword%3A%22Neuropeptide+%5BKW-0527%5D%22++NOT+fragment%3Ayes+NOT+keyword%3A%22Hormone+%5BKW-
+0372%5D%22+NOT+annotation%3A%28type%3Aintramem%29&sort=score
+
+*Note - this includes neurotoxins, which may include missclassified neuropeptides..
+
+ 3,537 -> [0.5ID] ->
