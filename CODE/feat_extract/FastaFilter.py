@@ -18,31 +18,11 @@ $1
 '''
 from sys import argv
 import os
-# from Bio.SeqIO.FastaIO import SimpleFastaParser, FastaIterator
 from Bio import SeqIO
-# from AAlphabets import ILLEGALS
-# from FeatureGen import remove_unknown_AA, contain_illegals, Get_Dirr_All_Fasta
 from collections import Counter
 from Bio.Seq import Seq
-# from Bio.SeqRecord import SeqRecord
-# from Bio.Alphabet import generic_protein
 
-# print('ILLEGALS',ILLEGALS)
 ILLEGALS = ['B', 'J', 'Z', 'X', 'U', 'O', 'Z']
-
-def remove_unknown_AA(s):
-  '''
-  Checks for and Removes unknown-Illegal AA in string/protein sequence.
-  Does NOT deal with any ambigous or nonstandard AA in the sequence.
-  Code for 'unknown amino acid' = Z
-  UNKNOWN_AA = "Z"
-  What best to do? (Currently whole protein ignored).
-  Possible: replace modified with standard, and count presence of
-  nonstandard AA as a feature (add to dict). Remove or replace others?
-  '''
-  if UNKNOWN_AA in s.upper():
-    s.replace(UNKNOWN_AA,"")
-  return s
 
 def contain_illegals(seq, illegals=ILLEGALS):
   '''

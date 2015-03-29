@@ -86,6 +86,31 @@ def PlotPerfPercentFeatures(X,y,est=LinearSVC()):
     plt.show()
 
 
+def PlotConfusionMatrix (cm,target_names,Title="Neuropeptides"):
+    '''
+    Works!
+    '''
+    import matplotlib as mpl
+    np.set_printoptions(suppress=True)
+    mpl.rc("figure", figsize=(16, 12))
+
+    hm = sns.heatmap(cm,
+                cbar=True,
+                annot=True,
+                square=True,
+                fmt='d',
+                yticklabels=target_names,
+                xticklabels=target_names,
+                cmap='Blues'
+                )
+    plt.title('Confusion matrix'+Title)
+    plt.ylabel('Actual class')
+    plt.xlabel('Predicted class')
+    plt.tight_layout()
+##    plt.savefig('./images/confmat.png', dpi=300)
+    plt.show()
+
+
 def CV_multi_stats(X, y, model,n=6) :
     '''
     http://scikit-learn.org/stable/modules/model_evaluation.html#classification-metrics
@@ -120,7 +145,7 @@ def CV_Binary_stats(X, y, model,n=10) :
     mean_recall = 0.0
     mean_accuracy = 0.0
 
-    sss = StratifiedShuffleSplit(y,  n_iter=n, test_size=0.18, random_state=0)
+    sss = StratifiedShuffleSplit(y,  n_iter=n, test_size=0.2, random_state=0)
     for train_index, test_index in sss:
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
@@ -211,7 +236,7 @@ def ModelParam_GridSearch(X_train, y_train, cv=3,scoreParam = 'precision'):
 
     'RandomForestClassifier:'
     parameters1 = {
-    'n_estimators': [200],
+    'n_estimators': [120],
     'criterion': ['gini'],
     'max_features': ['auto',0.4],
     'min_samples_leaf':[1,2],
@@ -223,20 +248,19 @@ def ModelParam_GridSearch(X_train, y_train, cv=3,scoreParam = 'precision'):
 
     'SVC:'
     parameters2 = {
-    'C': [0.1, 1,10,50,100],
+    'C': [0.2, 1,10,50,100,1000],
     # 'kernel': ['linear','rbf'],
     'kernel': ['rbf'],
     'gamma': [0.1,0.0, 1.0],
     'cache_size':[1900],
     'class_weight':['auto',None],
-    'tol':[0.005]
     }
 # , 'poly','sigmoid']
     'GradientBoostingClassifier'
     parameters3 = {
-    'max_depth':[3,5,7],
-    'n_estimators': [150],
-    'min_samples_leaf':[2,4],
+    'max_depth':[5,7],
+    'n_estimators': [80],
+    # 'min_samples_leaf':[2],
     # 'learning_rate': [0.1, 0.05],
     'max_features': ['auto',0.4]
     }
@@ -244,7 +268,7 @@ def ModelParam_GridSearch(X_train, y_train, cv=3,scoreParam = 'precision'):
 
     'LogisticRegression:'
     parameters4 = {
-    'C': [0.01, 0.1, 1.0,10,50,100],
+    'C': [1.0,10,100],
     'penalty': ['l1','l2'],'class_weight':['auto',None]
     }
 
@@ -274,7 +298,7 @@ def ModelParam_GridSearch(X_train, y_train, cv=3,scoreParam = 'precision'):
         clf_name = str(pips[i])
         print(clf_name[0:clf_name.index("(")])
         gs = GridSearchCV(estimator=pips[i], param_grid=pars[i],
-                          verbose=1, refit=True, n_jobs=-1,iid=True,
+                          verbose=1, refit=True, n_jobs=-1,iid=False,
                           fit_params={'sample_weight': balance_weights(y_train)},
                           pre_dispatch='1.5*n_jobs',scoring=scoreParam,
                           cv=StratifiedKFold(y_train,n_folds=cv,shuffle=True))
@@ -329,7 +353,7 @@ def GetAllPerf (filePaths=None):
         # 'TopRFE-Features','Best (f1) Model parameters',
          '# Classes',
          'Array-Acc-Scores' ,'Array-f1-Scores'
-         ,'bestML-Acc','bestML-f1'])
+         ,'bestML-Acc','bestML-f1','dummy_freq_f1_weighted'])
 
 
     #redDict holds results for each file/class, for saving to output-file
@@ -360,18 +384,18 @@ def GetAllPerf (filePaths=None):
         resDict["# Classes"][fileName]=len(lb_encoder.classes_)
 
         KFilt=None
-        KFilt=500  #This is just temporary for the outputs - saves computation time. Barely filters compared to the model itself.
+        KFilt=350  #This is just temporary for the outputs - saves computation time. Barely filters compared to the model itself.
 
         if KFilt is not None:
             k = SelectKBest(k=KFilt).fit(X,y)
             X=k.transform(X)
             featureNames=featureNames[k.get_support()]
 
-            Fwe = SelectFwe(alpha=0.01).fit(X,y)
-            X=Fwe.transform(X)
-            featureNames=featureNames[Fwe.get_support()]
+        Fwe = SelectFwe(alpha=0.01).fit(X,y)
+        X=Fwe.transform(X)
+        featureNames=featureNames[Fwe.get_support()]
 
-            print("X reduced to K best features: ",X.shape)
+        print("X reduced to K best features: ",X.shape)
 
 
         FeatSelection_SVM=False #Feature Names need updating!!
@@ -379,18 +403,17 @@ def GetAllPerf (filePaths=None):
 
         if FeatSelection_RandLogReg == True:
             LogRegFeats = RandomizedLogisticRegression(C=10, scaling=0.5,
-             sample_fraction=0.95, n_resampling=30, selection_threshold=0.2,n_jobs=-1).fit(X,y)
+             sample_fraction=0.95, n_resampling=40, selection_threshold=0.2,n_jobs=-1).fit(X,y)
             X_L1 = LogRegFeats.transform(X)
             featureNames=featureNames[LogRegFeats.get_support()]
             print("RandomizedLogisticRegression Feature Selection ->:",X_L1.shape)
 
         elif FeatSelection_SVM == True:
-            svc_L1= LinearSVC(C=50, penalty="l2", dual=False,class_weight='auto').fit(X, y)
+            svc_L1= LinearSVC(C=30, penalty="l2", dual=False,class_weight='auto').fit(X, y)
             X_L1 = svc_L1.transform(X, y)
             featureNames=featureNames[list(set(np.where(svc_L1.coef_ != 0)[-1]))]
             print ("L1 SVM Transformed X:",X_L1.shape)
         # X=X_L1
-
 
         '''
         print("Performance as a function of percent of features used:")
@@ -400,7 +423,7 @@ def GetAllPerf (filePaths=None):
         'EG - graph best features; feature selection using RF, ensemble classifiers..'
         'http://nbviewer.ipython.org/github/herrfz/dataanalysis/blob/master/assignment2/samsung_data_prediction_submitted.ipynb'
 
-        RFE_FeatsToKeep = 20
+        RFE_FeatsToKeep = 16
         FeatSelection_RFE=False
         FeatSelection_RFECV=False
 
@@ -411,7 +434,7 @@ def GetAllPerf (filePaths=None):
             # svc = LogisticRegression(class_weight='auto')#,C=1)
 
             if FeatSelection_RFECV==True:
-                rfecv = RFECV(estimator=svc, step=0.1,scoring='recall')
+                rfecv = RFECV(estimator=svc, step=RFE_FeatsToKeep,scoring='average_precision')
                              # ,cv=StratifiedShuffleSplit(y,n_iter=3,test_size=0.3))
                              #,scoring='f1',verbose=0) # " scoring='roc_auc','recall','f1',accuracy..."
             else:
@@ -438,11 +461,22 @@ def GetAllPerf (filePaths=None):
 
         "http://blog.yhathq.com/posts/predicting-customer-churn-with-sklearn.html"
         print()
+
+        "Make custom F1 scorer. May not have fixed problem!"
+        from sklearn.metrics.score import make_scorer
+        f1_scorer = make_scorer(metrics.f1_score,
+                     greater_is_better=True, average="micro") #Maybe another metric? May NOT be fixed!?. #weighted, micro, macro, none
+
         # print("Dummy classifiers output:")
 
         dummy_frequent = DummyClassifier(strategy='most_frequent',random_state=0)
-        dummy_freq_acc = '{:.3}'.format(metrics.accuracy_score(y, Get_yPred(X,y,clf_class=dummy_frequent)))
-        dummy_freq_f1 = '{:.3}'.format(metrics.f1_score(y, Get_yPred(X,y,clf_class=dummy_frequent)))
+        y_dummyPred = Get_yPred(X,y,clf_class=dummy_frequent)
+        dummy_freq_acc = '{:.3}'.format(metrics.accuracy_score(y,y_dummyPred ))
+        dummy_freq_f1 = '{:.3}'.format(metrics.f1_score(y, y_dummyPred,average='weighted'))
+
+        dummy_freq_f1_weighted = '{:.3}'.format(f1_scorer(y, y_dummyPred))
+        #Get from ALL classes f1..
+        dummy_freq_f1_mean=(metrics.f1_score(y, y_dummyPred,average=None)).mean()
         # print("Dummy, most frequent acc:",dummy_freq_acc)
 
         # dummy_stratifiedRandom = DummyClassifier(strategy='stratified',random_state=0)
@@ -451,12 +485,19 @@ def GetAllPerf (filePaths=None):
         print()
 
         resDict['dummy_freq:Accuracy'][fileName]=dummy_freq_acc
-        resDict['dummy_freq:f1'][fileName]=dummy_freq_f1
+##        resDict['dummy_freq:f1'][fileName]=dummy_freq_f1 dummy_freq_f1_mean
+        resDict['dummy_freq:f1'][fileName]=dummy_freq_f1_mean
+
+        resDict['dummy_freq_f1_weighted'][fileName]=dummy_freq_f1_weighted
         # resDict.dummy_Stratfreq[fileName]=dummy_strat2
 
         "We can get seperately the best model for Acc, and the best for f1!"
+        "WARNING!? In binary case - default F1 works for the 1 class, in sklearn 15. and lower"
+        # bestEst_f1,bestScore_f1 = ModelParam_GridSearch(X,y,cv=3,scoreParam = 'f1')
+        "Temporary workaround until next SKlearn update of F1 metric:"
+        # bestEst_f1,bestScore_f1 = ModelParam_GridSearch(X,y,cv=3,scoreParam = 'f1')f1_scorer
+        bestEst_f1,bestScore_f1 = ModelParam_GridSearch(X,y,cv=3,scoreParam = f1_scorer)
 
-        bestEst_f1,bestScore_f1 = ModelParam_GridSearch(X,y,cv=2,scoreParam = 'f1')
         bestEst_acc,bestScore_acc = ModelParam_GridSearch(X,y,cv=2,scoreParam = 'accuracy')
         print("bestEst (f1):",bestEst_f1)#,"best f1",bestScore_f1)
         print("bestEst (f1):",bestEst_acc)#,"best acc",bestScore_acc)
@@ -497,31 +538,6 @@ def GetAllPerf (filePaths=None):
     print("Saving results to file")
     resDict.to_csv("OutputData.tsv", sep=',')
 
-
-def PlotConfusionMatrix (cm,target_names,Title="Neuropeptides"):
-    '''
-    Works! Good.
-    ToDO: Class Name
-    '''
-    import matplotlib as mpl
-    np.set_printoptions(suppress=True)
-    mpl.rc("figure", figsize=(12, 9))
-
-    hm = sns.heatmap(cm,
-                cbar=True,
-                annot=True,
-                square=True,
-                fmt='d',
-                yticklabels=target_names,
-                xticklabels=target_names,
-                cmap='Blues'
-                )
-    plt.title('Confusion matrix'+Title)
-    plt.ylabel('Actual class')
-    plt.xlabel('Predicted class')
-    plt.tight_layout()
-##    plt.savefig('./images/confmat.png', dpi=300)
-    plt.show()
 
 # #alt
 # def plot_confusion_matrix(cm,target_names, title='Confusion matrix', cmap=plt.cm.Blues):

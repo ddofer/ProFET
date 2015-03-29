@@ -1,0 +1,87 @@
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc}{}\section{feat\+\_\+extract.\+Sci\+Kit\+\_\+plot\+\_\+roc Namespace Reference}
+\label{namespacefeat__extract_1_1_sci_kit__plot__roc}\index{feat\+\_\+extract.\+Sci\+Kit\+\_\+plot\+\_\+roc@{feat\+\_\+extract.\+Sci\+Kit\+\_\+plot\+\_\+roc}}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a03784c27a1a2c5022ca5b0b2c2c417a3}{}tuple \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a03784c27a1a2c5022ca5b0b2c2c417a3}{df} = pd.\+read\+\_\+csv(\textquotesingle{}training\+Set\+Features.\+csv\textquotesingle{})\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a03784c27a1a2c5022ca5b0b2c2c417a3}
+
+\begin{DoxyCompactList}\small\item\em os.\+chdir(r\textquotesingle{}/cs/prt3/danofer/\+Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/\+N\+P/\+S\+P\+\_\+\+Cleaved+\+N\+P+\+Neg\+\_\+\+Big\textquotesingle{}) \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a2dbfb1de33281afe0149c10700c83868}{}list \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a2dbfb1de33281afe0149c10700c83868}{feature\+\_\+cols} = \mbox{[}col for col in df.\+columns if col not in \mbox{[}\textquotesingle{}classname\textquotesingle{},\textquotesingle{}Id\textquotesingle{},\textquotesingle{}proteinname\textquotesingle{}\mbox{]}\mbox{]}\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a2dbfb1de33281afe0149c10700c83868}
+
+\begin{DoxyCompactList}\small\item\em df.\+drop(\textquotesingle{}proteinname\textquotesingle{},axis=1, inplace=True) \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_af67c2ce466362b9da41b1b96c372931f}{}list {\bfseries X} = \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a03784c27a1a2c5022ca5b0b2c2c417a3}{df}\mbox{[}\hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a2dbfb1de33281afe0149c10700c83868}{feature\+\_\+cols}\mbox{]}\label{namespacefeat__extract_1_1_sci_kit__plot__roc_af67c2ce466362b9da41b1b96c372931f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a309465c0360129f8054a078dc27ff34b}{}{\bfseries y} = df.\+classname.\+values\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a309465c0360129f8054a078dc27ff34b}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_abcf1efec812b83ae64177fdd0f5a0786}{}tuple {\bfseries Fwe} = Select\+Fwe(alpha=0.\+01)\label{namespacefeat__extract_1_1_sci_kit__plot__roc_abcf1efec812b83ae64177fdd0f5a0786}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a73359a768a8601816742c5621f7e300d}{}tuple {\bfseries le} = Label\+Encoder()\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a73359a768a8601816742c5621f7e300d}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a579c7137b898094fed7449bcb8580d30}{}tuple \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a579c7137b898094fed7449bcb8580d30}{n\+\_\+classes} = len(set(y))\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a579c7137b898094fed7449bcb8580d30}
+
+\begin{DoxyCompactList}\small\item\em n\+\_\+classes = y.\+shape\mbox{[}1\mbox{]} \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a02a0d487af5ca63fa4a8e337a9fc1b5f}{}tuple {\bfseries target\+\_\+names} = list(le.\+classes\+\_\+)\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a02a0d487af5ca63fa4a8e337a9fc1b5f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a8b0b42ffc18823f8984e05932472af40}{}tuple \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a8b0b42ffc18823f8984e05932472af40}{rf} = Random\+Forest\+Classifier(n\+\_\+jobs=-\/1,min\+\_\+samples\+\_\+split= 2, max\+\_\+features= 0.\+4, min\+\_\+samples\+\_\+leaf= 2, n\+\_\+estimators= 20, max\+\_\+depth= 8)\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a8b0b42ffc18823f8984e05932472af40}
+
+\begin{DoxyCompactList}\small\item\em X\+\_\+train, X\+\_\+test, y\+\_\+train, y\+\_\+test = train\+\_\+test\+\_\+split(X, y, test\+\_\+size=.5, random\+\_\+state=0) \end{DoxyCompactList}\item 
+tuple \hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a98d01a02754219127aef4d005b5a6792}{y\+\_\+score} = Get\+\_\+y\+Pred(X,y,\hyperlink{namespacefeat__extract_1_1_sci_kit__plot__roc_a8b0b42ffc18823f8984e05932472af40}{rf},n\+\_\+folds=2, pred\+\_\+proba=True)
+\begin{DoxyCompactList}\small\item\em svm =S\+V\+C(C=50, cache\+\_\+size=1500, class\+\_\+weight=\textquotesingle{}auto\textquotesingle{},gamma=0.\+0, kernel=\textquotesingle{}rbf\textquotesingle{}, max\+\_\+iter=-\/1, probability=True ) rf = Random\+Forest\+Classifier(max\+\_\+depth= None, min\+\_\+samples\+\_\+split= 3, min\+\_\+samples\+\_\+leaf= 1, n\+\_\+estimators= 250, n\+\_\+jobs= -\/1, max\+\_\+features= auto) \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_aca9bca14b02cc6ce37b7aa2e69c9524f}{}tuple {\bfseries fpr} = dict()\label{namespacefeat__extract_1_1_sci_kit__plot__roc_aca9bca14b02cc6ce37b7aa2e69c9524f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a27af3aa05cd8c25711ddbe940ece1850}{}tuple {\bfseries tpr} = dict()\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a27af3aa05cd8c25711ddbe940ece1850}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a4b6479bcfc1d29c48dc4867845a5ffbc}{}tuple {\bfseries roc\+\_\+auc} = dict()\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a4b6479bcfc1d29c48dc4867845a5ffbc}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_ac510a7d140e9ab72f96b3011f9d67d35}{}string {\bfseries label} = \textquotesingle{}micro-\/average R\+O\+C curve (area = \{0\+:0.\+2f\})\textquotesingle{}\label{namespacefeat__extract_1_1_sci_kit__plot__roc_ac510a7d140e9ab72f96b3011f9d67d35}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}=======================================
+Receiver Operating Characteristic (ROC)
+=======================================
+
+Example of Receiver Operating Characteristic (ROC) metric to evaluate
+classifier output quality.
+
+ROC curves typically feature true positive rate on the Y axis, and false
+positive rate on the X axis. This means that the top left corner of the plot is
+the "ideal" point - a false positive rate of zero, and a true positive rate of
+one. This is not very realistic, but it does mean that a larger area under the
+curve (AUC) is usually better.
+
+The "steepness" of ROC curves is also important, since it is ideal to maximize
+the true positive rate while minimizing the false positive rate.
+
+ROC curves are typically used in binary classification to study the output of
+a classifier. In order to extend ROC curve and ROC area to multi-class
+or multi-label classification, it is necessary to binarize the output. One ROC
+curve can be drawn per label, but one can also draw a ROC curve by considering
+each element of the label indicator matrix as a binary prediction
+(micro-averaging).
+
+.. note::
+
+    See also :func:`sklearn.metrics.roc_auc_score`,
+     :ref:`example_plot_roc_crossval.py`.\end{DoxyVerb}
+ 
+
+\subsection{Variable Documentation}
+\hypertarget{namespacefeat__extract_1_1_sci_kit__plot__roc_a98d01a02754219127aef4d005b5a6792}{}\index{feat\+\_\+extract\+::\+Sci\+Kit\+\_\+plot\+\_\+roc@{feat\+\_\+extract\+::\+Sci\+Kit\+\_\+plot\+\_\+roc}!y\+\_\+score@{y\+\_\+score}}
+\index{y\+\_\+score@{y\+\_\+score}!feat\+\_\+extract\+::\+Sci\+Kit\+\_\+plot\+\_\+roc@{feat\+\_\+extract\+::\+Sci\+Kit\+\_\+plot\+\_\+roc}}
+\subsubsection[{y\+\_\+score}]{\setlength{\rightskip}{0pt plus 5cm}tuple feat\+\_\+extract.\+Sci\+Kit\+\_\+plot\+\_\+roc.\+y\+\_\+score = Get\+\_\+y\+Pred(X,y,{\bf rf},n\+\_\+folds=2, pred\+\_\+proba=True)}\label{namespacefeat__extract_1_1_sci_kit__plot__roc_a98d01a02754219127aef4d005b5a6792}
+
+
+svm =S\+V\+C(C=50, cache\+\_\+size=1500, class\+\_\+weight=\textquotesingle{}auto\textquotesingle{},gamma=0.\+0, kernel=\textquotesingle{}rbf\textquotesingle{}, max\+\_\+iter=-\/1, probability=True ) rf = Random\+Forest\+Classifier(max\+\_\+depth= None, min\+\_\+samples\+\_\+split= 3, min\+\_\+samples\+\_\+leaf= 1, n\+\_\+estimators= 250, n\+\_\+jobs= -\/1, max\+\_\+features= auto) 
+
+classifier = One\+Vs\+Rest\+Classifier(svm.\+S\+V\+C(kernel=\textquotesingle{}rbf\textquotesingle{}, probability=True, cache\+\_\+size=1200,random\+\_\+state=random\+\_\+state)) y\+\_\+score = classifier.\+fit(\+X\+\_\+train, y\+\_\+train).decision\+\_\+function(\+X\+\_\+test) \#\+O\+R\+I\+G Use Y\+\_\+pred here, maybe with dec\+\_\+func? 

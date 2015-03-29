@@ -469,10 +469,7 @@ class ProtFeat:
             k_dict = self.GetkgramCounts(k=k,IgnoreAlphabetType=True)
         mirrored_k = self.KMirrors(k_dict)
         if AddMirrorsPrefix==True:
-#            return self.Dict_Keys_prefix(mirrored_k,'Mirror_')
              mirrored_k=self.Dict_Keys_prefix(mirrored_k,' Mirror K-mer ')
-#        else:
-#            return mirrored_k
         return self.alphabet_prefix(mirrored_k)
 
     def KMirrors(self,k_dict):
@@ -967,7 +964,8 @@ class ProtFeat:
         #Avoid divide by zero error:
         if sum(sub_seq) == 0:
             # return 0
-            return {'AutoCorrelation: MAX':0}
+            return {str_prefix+"MAX":0}
+            # return {'AutoCorrelation: MAX':0}
 
                 #How to Normalize - By Sum ("1's") or seq.length?
         'lengthNorm = "length" normalization variable. By seq.length or sum of "1"s/signals'
@@ -988,7 +986,7 @@ class ProtFeat:
         autoCor6 = selfCor[-6] / lengthNorm
         autoCor8 = selfCor[-8] / lengthNorm
         autoCor9 = selfCor[-9] / lengthNorm
-        # autoCor12 = selfCor[-12] / lengthNorm
+        autoCor12 = selfCor[-12] / lengthNorm
         # 'autoCorrelation_1':autoCor1,
 
         res = {
@@ -999,6 +997,7 @@ class ProtFeat:
         ' Lag:6':autoCor6,
         ' Lag:8':autoCor8,
         ' Lag:9':autoCor9,
+        ' Lag:12':autoCor12
         }
                 # 'autoCorrelation_MAX':Max_autoCor
         return self.Dict_Keys_prefix(res,str(str_prefix))
@@ -1106,7 +1105,7 @@ class ProtFeat:
 
         res.update(Tail_AAFreq)
 
-        PH_range = [4.5,5.5,6.8,7.2,7.5,8.1]
+        PH_range = [4.5,5.5,6.8,7.2,8.1]
         PI = {'PI':self.Get_PI()}
         res.update(PI)
         res.update(self.get_netCharge(PH_ranges = PH_range))
@@ -1139,7 +1138,7 @@ class ProtFeat:
     'TODO: think what we want as "deafault".. and update docstring'
     'TODO: allow input of variables (param scale window size..)'
     'TODO: Make use of features by a paramter ("GetAliphaticness=True,..." )'
-    def GetSimpleFeatures (self,ParamScaleWindow=6,segDivide=2,DisorderSegments=5):
+    def GetSimpleFeatures (self,ParamScaleWindow=6,segDivide=1,DisorderSegments=4):
         '''
         Returns A large number of "default" features, good for most cases.
         This is meant to be called when the sequence is
@@ -1164,7 +1163,7 @@ class ProtFeat:
         res.update(self.getFIDisorder(segments=DisorderSegments)) #Tal Arian feature
         return res
 
-    def cysteineMotif(self,segDivide=4): ##If used as part of regular Prot package, import self.  (Why have it as static submethod? Less consistant..)
+    def cysteineMotif(self,segDivide=3): ##If used as part of regular Prot package, import self.  (Why have it as static submethod? Less consistant..)
         '''
         CHANGED: Threshhold for counts removed, made into variable feature instead of discrete
         Note: We could re-increase the threshhold (min 1 count instead of >1).
@@ -1236,18 +1235,17 @@ if __name__=="__main__":
     print(cds.getFIDisorder())
     print(cds.getCysteineMotifs())
 
-    print (cds.GetSimpleFeatures())
-    print(cds.Get_SimpleProtParam())
+    # print (cds.GetSimpleFeatures())
+    # print(cds.Get_SimpleProtParam())
 
     print (cds.GetEntropy(normalizeTotEntropy=True))
     print (cds.BinaryAutocorrellation())
-    # print ('tail \n',cds.tail_properties())
 
-    print (cds.GetAA_Freq())
+    # print (cds.GetAA_Freq())
     # print ('tail \n',cds.tail_properties(GetFullAAFreq=True,tail_end='C'))
 
-    print(cds.Get_ParamScales_Features(6))
-    print(cds.Get_SubSeqParamScales_Features())
+    # print(cds.Get_ParamScales_Features(6))
+    # print(cds.Get_SubSeqParamScales_Features())
 
     # print(timeit.timeit(stmt=cds.Get_ParamScales_Features, number=40))
     # print(timeit.timeit(stmt=cds.Get_SubSeqParamScales_Features, number=40))
@@ -1259,7 +1257,8 @@ if __name__=="__main__":
     # print(cds.calculateProteinCharge(7.2))
     # print(cds.get_netCharge())
     # print('length:',cds.length)
-    # print (cds.GetCTD())
+    print("\n \n")
+    print (cds.GetCTD())
 
     # print ('KGram Frequencies: %s' %(cds.GetkgramFreq(2)))
     # b=cds.GetKMirrorsFreq(2)

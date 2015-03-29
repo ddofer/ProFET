@@ -39,7 +39,6 @@ Note - Directory names may not contain any spaces!
 
 Note - Fasta files will be acquired recursively from any subdirectories in the folder!
 
-Linux users: if given the error "'utf-8' codec can't decode byte 0xb0 in position 37: invalid start byte" - resave the fasta files in "Classic mac" or "Windows" format from a text editor.
 
 
 python pipeline.py --trainingSetDir /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/alt_NP --classType file --testingSetDir /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/CnidNPValidation --trainFeatures True --testFeatures True --resultsDir /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/CnidNPValidation
@@ -81,3 +80,9 @@ python pipeline.py  --classType id -r /a/fr-05/vol/protein/danofer/ProtFeat/feat
 python pipeline.py --classType file -r /a/fr-05/vol/protein/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/Train --testFeatures True --resultsDir /a/fr-05/vol/protein/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/validate_cnidNP/ --testingSetDir /a/fr-05/vol/protein/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/validate_cnidNP/
 
 
+
+python pipeline.py -r "E:\Dropbox\Dropbox\bioInf_lab\AA_info\CODE\feat_extract\Chap\train" -s "E:\Dropbox\Dropbox\bioInf_lab\AA_info\CODE\feat_extract\Chap\test1" -rs "E:\Dropbox\Dropbox\bioInf_lab\AA_info\CODE\feat_extract\Chap" --testFeatures True --trainFeatures False
+
+python pipeline.py -r "./chap/train" -s "./chap/test" -rs "./chap" --testFeatures True --trainFeatures False
+
+python pipeline.py -r "/cs/prt3/danofer/ProtFeat/feat_extract/chap/train" -s "/cs/prt3/danofer/ProtFeat/feat_extract/chap/test" -rs "/cs/prt3/danofer/ProtFeat/feat_extract/chap" --testFeatures True --trainFeatures False

@@ -409,7 +409,7 @@ def ModelParam_GridSearch(X_train, y_train, cv=4,scoreParam = 'f1'):
         est = gs.best_estimator_
         scores = cross_val_score(est, X_train,
                                  y_train,
-                                 cv=StratifiedShuffleSplit(y=y_train, n_iter=11, test_size=0.15),scoring=scoreParam,
+                                 cv=StratifiedShuffleSplit(y=y_train, n_iter=10, test_size=0.2),scoring=scoreParam,
                                  n_jobs=-1, pre_dispatch='1.8*n_jobs')
         print("Tuned Model's %s Score: %0.3f (+/- %0.3f)" % (scoreParam,scores.mean(), scores.std() * 2))
 
@@ -487,7 +487,7 @@ if __name__ == '__main__' :
         # svc = LogisticRegression(class_weight='auto')#,C=1)
         if FeatSelection_RFECV==True:
             rfecv = RFECV(estimator=svc, step=0.1,
-                         cv=StratifiedShuffleSplit(y,n_iter=6,test_size=0.3),
+                         cv=StratifiedShuffleSplit(y,n_iter=7,test_size=0.33),
                          scoring='f1',verbose=0)
             # " scoring='roc_auc','recall','f1'..."
         else:

@@ -1,0 +1,116 @@
+\hypertarget{namespacefeat__extract_1_1plot__roc}{}\section{feat\+\_\+extract.\+plot\+\_\+roc Namespace Reference}
+\label{namespacefeat__extract_1_1plot__roc}\index{feat\+\_\+extract.\+plot\+\_\+roc@{feat\+\_\+extract.\+plot\+\_\+roc}}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+list \hyperlink{namespacefeat__extract_1_1plot__roc_a1e739bbf71d2ec8c6fd3045e50b87ab7}{file\+Paths} = \mbox{[}\textquotesingle{}/cs/prt3/danofer/Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/N\+P/S\+P\+\_\+\+Cleaved+N\+P+Neg\+\_\+\+Big\textquotesingle{},\textquotesingle{}/a/fr-\/05/vol/protein/danofer/Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/Thermophile\textquotesingle{}\mbox{]}
+\begin{DoxyCompactList}\small\item\em Data I\+O and generation. \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a342df99fbf248b64c6b6560a0606c329}{}list {\bfseries file\+Names} = \mbox{[}\textquotesingle{}Neuropeptide Precursors\textquotesingle{},\textquotesingle{}Thermophiles\textquotesingle{}\mbox{]}\label{namespacefeat__extract_1_1plot__roc_a342df99fbf248b64c6b6560a0606c329}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a4c01be685a085feceb4b6b5d8ca7b35c}{}list {\bfseries line\+Colours} = \mbox{[}(\textquotesingle{}\+:\textquotesingle{},\textquotesingle{}red\textquotesingle{}),(\textquotesingle{}-\/\textquotesingle{},\textquotesingle{}blue\textquotesingle{}),(\textquotesingle{}-\/-\/\textquotesingle{},\textquotesingle{}green\textquotesingle{})\mbox{]}\label{namespacefeat__extract_1_1plot__roc_a4c01be685a085feceb4b6b5d8ca7b35c}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a7d9aea0af8a3573ac055df57dfebb55c}{}int {\bfseries n} = -\/1\label{namespacefeat__extract_1_1plot__roc_a7d9aea0af8a3573ac055df57dfebb55c}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_aca74af019250da2bfe1baae87d16fbc6}{}list {\bfseries file\+Name} = file\+Names\mbox{[}n\mbox{]}\label{namespacefeat__extract_1_1plot__roc_aca74af019250da2bfe1baae87d16fbc6}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_adc330f82839e976bce5fb8359c90459f}{}tuple {\bfseries df} = pd.\+read\+\_\+csv(\textquotesingle{}training\+Set\+Features.\+csv\textquotesingle{})\label{namespacefeat__extract_1_1plot__roc_adc330f82839e976bce5fb8359c90459f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a8b39493420e7e990a45b2b8a41cfd5de}{}list \hyperlink{namespacefeat__extract_1_1plot__roc_a8b39493420e7e990a45b2b8a41cfd5de}{feature\+\_\+cols} = \mbox{[}col for col in df.\+columns if col not in \mbox{[}\textquotesingle{}classname\textquotesingle{},\textquotesingle{}Id\textquotesingle{},\textquotesingle{}proteinname\textquotesingle{}\mbox{]}\mbox{]}\label{namespacefeat__extract_1_1plot__roc_a8b39493420e7e990a45b2b8a41cfd5de}
+
+\begin{DoxyCompactList}\small\item\em df.\+drop(\textquotesingle{}proteinname\textquotesingle{},axis=1, inplace=True) \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_aec9c4df013fc88a78c3302fa393d59b6}{}list {\bfseries X} = df\mbox{[}\hyperlink{namespacefeat__extract_1_1plot__roc_a8b39493420e7e990a45b2b8a41cfd5de}{feature\+\_\+cols}\mbox{]}\label{namespacefeat__extract_1_1plot__roc_aec9c4df013fc88a78c3302fa393d59b6}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a0d1f7e80452338d1ad67e7f9e2b0809f}{}{\bfseries y} = df.\+classname.\+values\label{namespacefeat__extract_1_1plot__roc_a0d1f7e80452338d1ad67e7f9e2b0809f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a14fc4605fdda1fa3729d6dadafed6d43}{}tuple {\bfseries Fwe} = Select\+Fwe(alpha=0.\+01)\label{namespacefeat__extract_1_1plot__roc_a14fc4605fdda1fa3729d6dadafed6d43}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_aa979a076424b35fed2f996a6c531672f}{}tuple {\bfseries le} = Label\+Encoder()\label{namespacefeat__extract_1_1plot__roc_aa979a076424b35fed2f996a6c531672f}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a591378c32ba05b68140db2ffa0d8e814}{}tuple {\bfseries n\+\_\+classes} = len(set(y))\label{namespacefeat__extract_1_1plot__roc_a591378c32ba05b68140db2ffa0d8e814}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a84f6476739a6a3ca3c76c8e19c3747fd}{}tuple {\bfseries target\+\_\+names} = list(le.\+classes\+\_\+)\label{namespacefeat__extract_1_1plot__roc_a84f6476739a6a3ca3c76c8e19c3747fd}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a85ad22b6e77fcb3d02aebed7a2e87dfa}{}tuple \hyperlink{namespacefeat__extract_1_1plot__roc_a85ad22b6e77fcb3d02aebed7a2e87dfa}{cv} = Stratified\+K\+Fold(y, n\+\_\+folds=13,shuffle=True)\label{namespacefeat__extract_1_1plot__roc_a85ad22b6e77fcb3d02aebed7a2e87dfa}
+
+\begin{DoxyCompactList}\small\item\em Classification and R\+O\+C analysis. \end{DoxyCompactList}\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_afdef0a520b9ebb15b45da337aceb3bf7}{}tuple {\bfseries svm} = S\+V\+C(C=50, cache\+\_\+size=1800, class\+\_\+weight=\textquotesingle{}auto\textquotesingle{},gamma=0.\+0, kernel=\textquotesingle{}rbf\textquotesingle{}, max\+\_\+iter=-\/1, probability=True )\label{namespacefeat__extract_1_1plot__roc_afdef0a520b9ebb15b45da337aceb3bf7}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_adb2ab7075148fd88c66821eb8f075c88}{}tuple {\bfseries rf} = Random\+Forest\+Classifier(max\+\_\+depth= None, min\+\_\+samples\+\_\+split= 3, min\+\_\+samples\+\_\+leaf= 1, n\+\_\+estimators= 250, n\+\_\+jobs= -\/1, max\+\_\+features= \char`\"{}auto\char`\"{})\label{namespacefeat__extract_1_1plot__roc_adb2ab7075148fd88c66821eb8f075c88}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a1e6ae6d06e350847f09607dc65c305d9}{}{\bfseries classifier} = svm\label{namespacefeat__extract_1_1plot__roc_a1e6ae6d06e350847f09607dc65c305d9}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_aed65812b350cced2aa313e8a122f76f5}{}float {\bfseries mean\+\_\+tpr} = 0.\+0\label{namespacefeat__extract_1_1plot__roc_aed65812b350cced2aa313e8a122f76f5}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a29f1476a33f42904715444d586d50f6a}{}tuple {\bfseries mean\+\_\+fpr} = np.\+linspace(0, 1, 100)\label{namespacefeat__extract_1_1plot__roc_a29f1476a33f42904715444d586d50f6a}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_aaaac4aa6b71cad6057a5b8f165d4cbd7}{}list {\bfseries all\+\_\+tpr} = \mbox{[}$\,$\mbox{]}\label{namespacefeat__extract_1_1plot__roc_aaaac4aa6b71cad6057a5b8f165d4cbd7}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a58916b23565425e67f6be69c656800c1}{}tuple {\bfseries probas\+\_\+} = classifier.\+fit(X\mbox{[}train\mbox{]}, y\mbox{[}train\mbox{]})\label{namespacefeat__extract_1_1plot__roc_a58916b23565425e67f6be69c656800c1}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_ae24d021fabd1b46fdaa116ec68a907d1}{}tuple {\bfseries roc\+\_\+auc} = auc(fpr, tpr)\label{namespacefeat__extract_1_1plot__roc_ae24d021fabd1b46fdaa116ec68a907d1}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_af1531fb585b9a220b138bdcd6b3a6e9e}{}tuple {\bfseries mean\+\_\+auc} = auc(mean\+\_\+fpr, mean\+\_\+tpr)\label{namespacefeat__extract_1_1plot__roc_af1531fb585b9a220b138bdcd6b3a6e9e}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a5b8a1ae108f0629d1f3e385230fc469c}{}string {\bfseries label} = \textquotesingle{}\%s \textbackslash{}n Mean R\+O\+C (area = \%0.\+2f)\textquotesingle{}\label{namespacefeat__extract_1_1plot__roc_a5b8a1ae108f0629d1f3e385230fc469c}
+
+\item 
+\hypertarget{namespacefeat__extract_1_1plot__roc_a6087c7ad1d569ee1ce006b4417c22651}{}list {\bfseries color} = line\+Colours\mbox{[}n\mbox{]}\label{namespacefeat__extract_1_1plot__roc_a6087c7ad1d569ee1ce006b4417c22651}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}=============================================================
+Receiver Operating Characteristic (ROC) with cross validation
+=============================================================
+
+
+ROC curves typically feature true positive rate on the Y axis, and false
+positive rate on the X axis. This means that the top left corner of the plot is
+the "ideal" point - a false positive rate of zero, and a true positive rate of
+one. This is not very realistic, but it does mean that a larger area under the
+curve (AUC) is usually better.
+
+This example shows the ROC response of different datasets, created from K-fold
+cross-validation. Taking all of these curves, it is possible to calculate the
+mean area under curve, and see the variance of the curve when the
+training set is split into different subsets. This roughly shows how the
+classifier output is affected by changes in the training data, and how
+different the splits generated by K-fold cross-validation are from one another.
+
+.. note::
+
+    See also :func:`sklearn.metrics.auc_score`,
+     :func:`sklearn.cross_validation.cross_val_score`,
+     :ref:`example_plot_roc.py`,\end{DoxyVerb}
+ 
+
+\subsection{Variable Documentation}
+\hypertarget{namespacefeat__extract_1_1plot__roc_a1e739bbf71d2ec8c6fd3045e50b87ab7}{}\index{feat\+\_\+extract\+::plot\+\_\+roc@{feat\+\_\+extract\+::plot\+\_\+roc}!file\+Paths@{file\+Paths}}
+\index{file\+Paths@{file\+Paths}!feat\+\_\+extract\+::plot\+\_\+roc@{feat\+\_\+extract\+::plot\+\_\+roc}}
+\subsubsection[{file\+Paths}]{\setlength{\rightskip}{0pt plus 5cm}list feat\+\_\+extract.\+plot\+\_\+roc.\+file\+Paths = \mbox{[}\textquotesingle{}/cs/prt3/danofer/Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/N\+P/S\+P\+\_\+\+Cleaved+N\+P+Neg\+\_\+\+Big\textquotesingle{},\textquotesingle{}/a/fr-\/05/vol/protein/danofer/Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/Thermophile\textquotesingle{}\mbox{]}}\label{namespacefeat__extract_1_1plot__roc_a1e739bbf71d2ec8c6fd3045e50b87ab7}
+
+
+Data I\+O and generation. 
+
+os.\+chdir(r\textquotesingle{}/cs/prt3/danofer/\+Prot\+Feat/feat\+\_\+extract/test\+\_\+seq/\+N\+P/\+S\+P\+\_\+\+Cleaved+\+N\+P+\+Neg\+\_\+\+Big\textquotesingle{}) 

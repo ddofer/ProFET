@@ -126,7 +126,7 @@ def StringtoNum(ProteinSequence,AAProperty):
       for index in m:
           # print ("index in m: %s" %(index))
           hardProteinSequence=str.replace(hardProteinSequence,index,k)
-    return (hardProteinSequence)
+    return hardProteinSequence
     # TProteinSequence=hardProteinSequence
     # return TProteinSequence
 
@@ -198,9 +198,9 @@ def CalculateComposition(ProteinSequence,AAProperty,AAPName):
     TProteinSequence=StringtoNum(ProteinSequence,AAProperty)
     Result={}
     Num=len(TProteinSequence)
-    Result[AAPName,'Composition:'+'1']=round(float(TProteinSequence.count('1'))/Num,3)
-    Result[AAPName,'Composition:'+'2']=round(float(TProteinSequence.count('2'))/Num,3)
-    Result[AAPName,'Composition:'+'3']=round(float(TProteinSequence.count('3'))/Num,3)
+    Result[AAPName +' Composition:'+'1']=round(float(TProteinSequence.count('1'))/Num,3)
+    Result[AAPName +' Composition:'+'2']=round(float(TProteinSequence.count('2'))/Num,3)
+    Result[AAPName +' Composition:'+'3']=round(float(TProteinSequence.count('3'))/Num,3)
     return Result
 
 def CalculateTransition(ProteinSequence,AAProperty,AAPName):
@@ -227,9 +227,9 @@ def CalculateTransition(ProteinSequence,AAProperty,AAPName):
     Result=defaultdict(float)
     Num=len(TProteinSequence)
     CTD=TProteinSequence
-    Result[AAPName,'Transitions:'+'12']=round(float(CTD.count('12')+CTD.count('21'))/(Num-1),3)
-    Result[AAPName,'Transitions:'+'13']=round(float(CTD.count('13')+CTD.count('31'))/(Num-1),3)
-    Result[AAPName,'Transitions:'+'23']=round(float(CTD.count('23')+CTD.count('32'))/(Num-1),3)
+    Result[AAPName +' Transitions:'+'12']=round(float(CTD.count('12')+CTD.count('21'))/(Num-1),3)
+    Result[AAPName +' Transitions:'+'13']=round(float(CTD.count('13')+CTD.count('31'))/(Num-1),3)
+    Result[AAPName +' Transitions:'+'23']=round(float(CTD.count('23')+CTD.count('32'))/(Num-1),3)
     return Result
 
 
@@ -269,18 +269,18 @@ def CalculateDistribution(ProteinSequence,AAProperty,AAPName):
             ink=ink+1
 
         if cds==[]:
-            Result[AAPName,'Distribution'+i+'001']=0
-            Result[AAPName,'Distribution'+i+'025']=0
-            Result[AAPName,'Distribution'+i+'050']=0
-            Result[AAPName,'Distribution'+i+'075']=0
-            Result[AAPName,'Distribution'+i+'100']=0
+            Result[AAPName +' Distribution'+i+'001']=0
+            Result[AAPName +' Distribution'+i+'025']=0
+            Result[AAPName +' Distribution'+i+'050']=0
+            Result[AAPName +' Distribution'+i+'075']=0
+            Result[AAPName +' Distribution'+i+'100']=0
         else:
 
-            Result[AAPName,'Distribution'+i+'001']=round(float(cds[0])/Num*100,3)
-            Result[AAPName,'Distribution'+i+'025']=round(float(cds[int(math.floor(num*0.25))-1])/Num*100,3)
-            Result[AAPName,'Distribution'+i+'050']=round(float(cds[int(math.floor(num*0.5))-1])/Num*100,3)
-            Result[AAPName,'Distribution'+i+'075']=round(float(cds[int(math.floor(num*0.75))-1])/Num*100,3)
-            Result[AAPName,'Distribution'+i+'100']=round(float(cds[-1])/Num*100,3)
+            Result[AAPName +' Distribution'+i+'001']=round(float(cds[0])/Num*100,3)
+            Result[AAPName +' Distribution'+i+'025']=round(float(cds[int(math.floor(num*0.25))-1])/Num*100,3)
+            Result[AAPName +' Distribution'+i+'050']=round(float(cds[int(math.floor(num*0.5))-1])/Num*100,3)
+            Result[AAPName +' Distribution'+i+'075']=round(float(cds[int(math.floor(num*0.75))-1])/Num*100,3)
+            Result[AAPName +' Distribution'+i+'100']=round(float(cds[-1])/Num*100,3)
 
     return Result
 

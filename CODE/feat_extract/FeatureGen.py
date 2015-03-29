@@ -2,7 +2,8 @@
 #! E:\Python33\python
 #Read FASTA files from given directory, generate output csv file with values for features.
 
-'Changed 2 lines in def get_MultiClass_features - Dan '
+"BUG: Handling of features with STD, mean =0. (df_cleaned... and normalize_zscore ) - Dan. 25.1"
+
 '''This script can:
 1. a) Parses either all .fasta files in a given directory ,
  OR Parses a single .Fasta file by path location.
@@ -45,10 +46,9 @@ import ProtFeat
 N_TAIL_REGION = 26
 C_TAIL_REGION = 24
 MIN_PROTEIN_LENGTH = 27 #Minimum length for protein sequences to be processed by FeatureGen().
-MIN_PROTEIN_LENGTH_TAILED = 47 #If Terminal Tail split (27) Minimum length for protein sequences to be processed by FeatureGen().
+MIN_PROTEIN_LENGTH_TAILED = 45 #If Terminal Tail split (27) Minimum length for protein sequences to be processed by FeatureGen().
 'Note: Re min length - this MUST take into account the length of the sequence '
 ' post "cleaving" for tail(s) AND the protparam windows! (minimum length ~17+)'
-
 
 
 def Get_Protein_Feat(seq,
@@ -56,18 +56,18 @@ def Get_Protein_Feat(seq,
   GetSimpleFeatSet=True,
   GetExtraScaleFeatSet=True,
   aaParamScaleWindow=7,
-  ExtraScaleWindow=15,
+  ExtraScaleWindow=17,
    GetSubSeqSegs=True,SubSeqSegs=3,
-   GetTriLetterGroupAlphKFreq=True,TriLetterGroupAlphK=4,
-   GetSeqReducedGroups=True,SeqReducedGroups='shen7',
+   GetTriLetterGroupAlphKFreq=True,TriLetterGroupAlphK=5,
+   GetSeqReducedGroups=True,SeqReducedGroups='ofer_w8',
    GetSeqReducedAlph=True,GetCTDFeatSet = True,
    GetPTMFeatSet= True, GetDBCleavageFeatSet=True,
-   split_N=False,split_C=False,N_TAIL_REGION=26,C_TAIL_REGION=25
+   split_N=False,split_C=False,N_TAIL_REGION=30,C_TAIL_REGION=30
    ):
     '''
     Get most/default protein features.
     This includes Features for the N-tail end (subseq), seperately from the
-    remaining sequence, and 14_letter (default) 2-mer composition.
+    remaining sequence, and ofer14 (default) k-mer composition.
 
     Can be expanded, to pass on alt. arguments (= which ProtFeat functions called).
     Reduced AA representation can be done here or seperately.
@@ -78,8 +78,8 @@ def Get_Protein_Feat(seq,
      N tail is based on SP average length..
 
      SeqReducedAlph : Reduced alphabet representation to use with extracting K-Mers.
-     Can be any standard
-     ReducedK    '''
+     Can be any saved Reduced alphabet - e.g. shen7, ofer_w8.
+     '''
     features_dict = {}
     main_seq = seq
     if split_N is True:
@@ -117,8 +117,8 @@ def Get_Protein_Feat(seq,
         features_dict.update (main_protein.GetCleavageCounts())
 
     if GetSubSeqSegs==True:
-      features_dict.update(main_protein.Get_SubSeqParamScales_Features(window=5,
-                                                                       edge=0.9,
+      features_dict.update(main_protein.Get_SubSeqParamScales_Features(window=4,
+                                                                       edge=1.0,
                                                                        PickScales = MinScales_Dict,
                                                                        segs=SubSeqSegs))
     'Reduced alphabet representation(s) of protein + Kmer Freqs'
@@ -135,13 +135,12 @@ def Get_Protein_Feat(seq,
       features_dict.update (ReducedAlphGroups_seq.GetEntropy())
 
     # UseVariableCombinations - not Tested if working yet!!
-    # hp3_seq = get_reduced_prot (seq=main_seq,alph_name="hp3_Plus")
     hp2_seq = get_reduced_prot (seq=main_seq,alph_name="hp2")
     features_dict.update (hp2_seq.GetkgramFreq(k=5))
     #features_dict.update (hp2_seq.GetEntropy())
 
     if GetTriLetterGroupAlphKFreq==True:
-      selected3alph_3 = ['SolventA_3','Disorder_3','SecondaryStr_3'] #]'NormVDWV_3' ,'Charge_3',,'Hydrophobicity_3' ]
+      selected3alph_3 = ['SolventA_3','Disorder_3','SecondaryStr_3','NormVDWV_3'] #]'NormVDWV_3' ,'Charge_3',,'Hydrophobicity_3' ]
       ' Get Profeat three letter group properties on whole sequence, (can be just main-seq)'
   ###    for alph_3 in THREE_LETTER_ALPH_NAMES: #THREE_LETTER_ALPH_NAMES - from Aalphabets, ProFEAT groups
 
@@ -153,6 +152,7 @@ def Get_Protein_Feat(seq,
 
 '''
 'TODO: Performance! '
+CHECK is "files.items" indeed a generator object [avoid memory use]
 #TODO - Seq length limit needs to be made dynamic!!
 'TODO: Make multicore-map work. (Currently it never gets called for multifile multiclass fasta..)'
 'TODO: Make Get_Protein_Feat flexible in terms of called features, add sending of params.. (EG - getNTail)'
@@ -160,6 +160,7 @@ def Get_Protein_Feat(seq,
 def GenFeaturesFromFasta(files=None, Dirr = '.', classType = 'dir'): #, Multiclass=True):
 
   '''
+  Given file(s), extract features for each protein sequence in the file.
   Gets protein features for each protein in the given list of file(s),
   or gets list of fasta files from provided Dirr.
 
@@ -188,7 +189,8 @@ def GenFeaturesFromFasta(files=None, Dirr = '.', classType = 'dir'): #, Multicla
                       (all_feature_dict[seq_id])['classname'] = title.split()[1]
   # print ('type(files) %s' %(type(files)))
 
-  for filename, classname in files.items():
+  
+  for filename, classname in files.items():  #Is files.items a generator?
       print('Getting features from a single fasta file- %s' %(files.keys()))
       GetFeatFasta(filename,classname)
 
@@ -222,21 +224,6 @@ def get_reduced_prot (seq,alph_name="ofer14"):
   # reduced_protein = Feature_Extract.ProtFeat.ProtFeat(ProteinSequence=red_seq,alph_letters=alph_name)
   reduced_protein = ProtFeat.ProtFeat(ProteinSequence=red_seq,alph_letters=alph_name)
   return(reduced_protein)
-
-
-def remove_unknown_AA(s):
-  '''
-  Checks for and Removes unknown-Illegal AA in string/protein sequence.
-  Does NOT deal with any ambigous or nonstandard AA in the sequence.
-  Code for 'unknown amino acid' = Z
-  UNKNOWN_AA = "Z"
-  What best to do? (Currently whole protein ignored).
-  Possible: replace modified with standard, and count presence of
-  nonstandard AA as a feature (add to dict). Remove or replace others?
-  '''
-  if UNKNOWN_AA in s.upper():
-    s.replace(UNKNOWN_AA,"")
-  return s
 
 def contain_illegals(seq, illegals=ILLEGALS):
   '''
@@ -414,8 +401,6 @@ def get_features(trainingSetFlag, classType, files=None,returndf = True,saveCSV 
         http://stackoverflow.com/questions/19851005/rename-pandas-dataframe-index?rq=1
         dataframe.index.names = ['samples']
     '''
-    ## FIX ?
-    # print(multiClassLabels)
     def get_MultiClass_features(trainingSetFlag, classType):
         fasta_files_dict = Get_Dirr_All_Fasta (classType,Dirr)
 
@@ -438,9 +423,6 @@ def get_features(trainingSetFlag, classType, files=None,returndf = True,saveCSV 
             http://www.bearrelroll.com/2013/05/python-pandas-tutorial/
             (We can also column-wise (axis=1) groupby - ['labels'] ) ;
             or:         df.index = ['two' for x in df.index]
-            multilevel index:
-            http://stackoverflow.com/questions/20085308/add-multi-index-to-pandas-dataframe-and-keep-current-index?rq=1
-            http://stackoverflow.com/questions/14744068/prepend-a-level-to-a-pandas-multiindex
             """
             # dataframe['labels'] = str(multiClassLabels[i])
             # print(file.split())
@@ -480,8 +462,8 @@ def get_features(trainingSetFlag, classType, files=None,returndf = True,saveCSV 
     print('Features generated')
     # print('Data converted to dataframe, NaN cleaned')
     if saveCSV == True:
-        print('Now Saving')
-        dataframe.to_csv(saveName+'.csv')  #TODO: 'Save to output folder?'
+        print('Saving to disk.')
+        dataframe.to_csv(saveName+'.csv')
     if returndf== True:
         return dataframe
 
@@ -567,17 +549,35 @@ def normalize_zscore(df,saveCSV = True,filename='Feat_normalized.csv', normParam
       f = lambda x: (x - x.mean()) / x.std()
       meanNormParams = df.copy().apply(np.mean)
       stdNormParams = df.copy().apply(np.std)
+      "TODO - set columns first? Dan"
       normParams = pd.concat([meanNormParams, stdNormParams], axis=1)
       normParams.columns = ['mean','std']
       z_df = df.apply(f)
       z_df.replace([np.inf, -np.inf], 0)
       z_df.fillna(0, inplace=True)
       if saveCSV:
+          print("Data normalized and saved to",filename)
           z_df.to_csv(filename) #,index=False)
-  else:
+  else:   #NormParams exist :
       z_df = df.copy()
       for index, row in normParams.iterrows():
-          z_df[index] = (z_df[index] - row['mean']) / row['std']
+          "Check that feature is indeed present in OUR data. (Not absent):"#new - Dan.
+          if index in z_df.columns: #Added - Dan
+              # print()
+              # print("index",index, "row",row)
+              # index=str(index) #New. Dan. 22.1
+              STD = row['std'] #Hack - avoid divide by 0 error
+              if STD==0:
+                  print(row,"STD=",row['std'])
+                  STD=0.1
+              # print("index: ",index)
+              # print("z_df [index]: \n",z_df[index])
+
+              # z_df[index] = ((z_df[index] - row['mean'])/row['std'])    # ORIG
+              z_df[index] = (z_df[index] - row['mean'])/STD
+          else:
+            print(index," Feature not present (and removed).")
+
       z_df.replace([np.inf, -np.inf], 0)
       z_df.fillna(0, inplace=True)
   return z_df, normParams
@@ -617,10 +617,8 @@ def filterDF (df,RemoveZeroes=True,RemoveDuplicateCol=False,RemoveNoVarCol=True)
 #                                                                         parameters for the testing data (irrelevant \
 #                                                                         in training data)', type = str)
 
-import params
+import params  #What is Params ??? #Dan.
 def featExt(directory, trainingSetFlag, classType, normParams):
-    #file_location = FILE_LOC_TRY
-    # file_location = FILE_LOC
 
     #print("directory is: ",directory)
     df = get_features(trainingSetFlag, classType, returndf = True,
@@ -628,32 +626,36 @@ def featExt(directory, trainingSetFlag, classType, normParams):
      multiClass=True, Dirr = directory)
 
     'Removal of all zero columns - should not be done this way, disabled. Dan. (must be for TEST as well as Train'
-    # print("Removing all zero features")
+    print("Removing any all zero features")
 
     # Training_Df =filterDF (Training_Df,removeZeroes=True,RemoveDuplicateCol=False) #OLD
     # Training_Df = Training_Df.groupby(Training_Df).filter(lambda x: x != 0) #OLD
 
-    # df_cleaned = df[df.columns[(df != 0).any()]] #All zero columns removed #ORIG
-    df_cleaned = df
-
+    'Remove all zero features. Dan 2015. New'
+    # df_cleaned = df[df.columns[(df != 0).any()]] #All zero columns removed #ORIG . #New - Used.
+    df_cleaned = df[[col for col in df.columns if (df[col].std()>0)]] #NEW Dan
+    df = df_cleaned  #Changed - was "df_cleaned=df"  mistakenly
+    print("df.shape: ",df.shape)
+    print("df_cleaned shape: ",df_cleaned.shape)
     # z_df = normalize_zscore(Training_Df,saveCSV = True,filename='Feat.csv')
     # MAD_df = normalize_median(Training_Df,saveCSV = True,filename='MAD_Feat.csv')
 
-    'MAD then Z-score'
+    # 'MAD then Z-score'
     ##    MAD_df = normalize_median(Training_Df,saveCSV = False,filename='MAD_Feat.csv')
     ##    df_cleaned = normalize_median(df_cleaned,saveCSV = False)
 
     if params.normalizeTrainingSetFlag == True:
-        if (trainingSetFlag == True):
+        if trainingSetFlag == True:
             z_df, normParams = normalize_zscore(df_cleaned,saveCSV = False,filename='Z+MAD_Feat.csv')
             normParams.to_csv('trainingSetNormParams.csv')
         else:
+            print("Loading stored NormParams")
             normParamDf = pd.read_csv(normParams, index_col=[0])
             z_df, normParams = normalize_zscore(df_cleaned,saveCSV = False,filename='Z+MAD_Feat.csv',normParams = normParamDf)
     else:
         z_df = df_cleaned
 
-    'Removal of all zero columns - should not be done this way, disabled. Dan'
+    # 'Removal of all zero columns - should not be done this way, disabled. Dan'
     # z_df_2 = z_df[z_df.columns[((abs(z_df) > 0.00001)).any()]] #All zero columns removed #ORIG
     z_df_2 = z_df #NEW
 
@@ -670,9 +672,7 @@ def featExt(directory, trainingSetFlag, classType, normParams):
 
     #"http://stackoverflow.com/questions/22485375/efficiently-select-rows-that-match-one-of-several-values-in-pandas-dataframe?rq=1"
     #"df[df.Name.isin(['cytosol', 'golgi'])]"
-    # print('time took: ', time1, time2, time3)
     return z_df, normParams
 
 if __name__=="__main__":
     featExt()
-

@@ -28,9 +28,9 @@ each element of the label indicator matrix as a binary prediction
              :ref:`example_plot_roc_crossval.py`.
 
 """
-##import sys
-##sys.path += [r'C:\Anaconda\Lib', r'C:\Anaconda\Lib\site-packages']
-##sys.path += [r'/cs/prt3/danofer/anaconda3',r'/cs/prt3/danofer/anaconda3/Lib',r'/cs/prt3/danofer/anaconda3/Lib/site-packages']
+import sys
+# sys.path += [r'C:\Anaconda\Lib', r'C:\Anaconda\Lib\site-packages']
+sys.path += [r'/cs/prt3/danofer/anaconda3',r'/cs/prt3/danofer/anaconda3/Lib',r'/cs/prt3/danofer/anaconda3/Lib/site-packages']
 
 print(__doc__)
 from sklearn.metrics import roc_curve, auc
@@ -100,8 +100,8 @@ print ("n_classes",n_classes,"target_names",target_names)
 ##                                                    random_state=0)
 
 'Best hyper param  classifiers For Thermophiles:'
-svm=SVC(C=50, cache_size=1500, class_weight='auto', gamma=0.0, kernel='rbf', probability=True)
-rf = RandomForestClassifier(n_jobs=-1,min_samples_split= 3, max_features= 0.4, min_samples_leaf= 2, n_estimators= 200, max_depth= 8)
+# svm=SVC(C=50, cache_size=1900, class_weight='auto', gamma=0.0, kernel='rbf', probability=True)
+rf = RandomForestClassifier(n_jobs=-1,min_samples_split= 2, max_features= 0.4, min_samples_leaf= 2, n_estimators= 20, max_depth= 8)
 
 'Best hyper param  classifiers For NP:'
 ##svm =SVC(C=50, cache_size=1500, class_weight='auto',gamma=0.0, kernel='rbf', max_iter=-1, probability=True )
@@ -114,9 +114,9 @@ rf = RandomForestClassifier(n_jobs=-1,min_samples_split= 3, max_features= 0.4, m
 ##y_score = classifier.fit(X_train, y_train).decision_function(X_test) #ORIG
 #Use Y_pred here, maybe with dec_func?
 
-y_score = Get_yPred (X,y,svm,n_folds=2, pred_proba=True)
+# y_score = Get_yPred (X,y,svm,n_folds=4, pred_proba=True)
 
-# y_score2 = Get_yPred (X,y,rf,n_folds=2, pred_proba=True)
+y_score = Get_yPred (X,y,rf,n_folds=2, pred_proba=True)
 
 # Compute ROC curve and ROC area for each class
 fpr = dict()
@@ -131,7 +131,7 @@ for i in range(n_classes):
 # fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
 fpr["micro"], tpr["micro"], _ = roc_curve(y.ravel(), y_score.ravel())
 roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
+'''
 # Plot of a ROC curve for a specific class
 plt.figure()
 plt.plot(fpr[2], tpr[2], label='ROC curve (area = %0.2f)' % roc_auc[2])
@@ -143,7 +143,7 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic')
 plt.legend(loc="lower right")
 plt.show()
-
+'''
 # Plot ROC curve
 plt.figure()
 plt.plot(fpr["micro"], tpr["micro"],
@@ -152,8 +152,7 @@ plt.plot(fpr["micro"], tpr["micro"],
 for i in range(n_classes):
     # plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.2f})'
     #                                ''.format(i, roc_auc[i]))
-    plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.2f})'
-                                   ''.format(i, target_names[i]))
+    plt.plot(fpr[i], tpr[i], label='ROC curve of class {0} (area = {1:0.2f})'.format(i, target_names[i]))
 
 
 plt.plot([0, 1], [0, 1], 'k--')
@@ -163,4 +162,7 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('multi-class Receiver operating characteristic')
 plt.legend(loc="lower right")
+sns.despine()
+plt.ion()
+
 plt.show()

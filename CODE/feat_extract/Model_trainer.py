@@ -59,13 +59,13 @@ def load_data(dataFrame="Feat_normalized.csv", dfType='file') :
 'TODO: Set params of model, by user selected/pretuned values (obtained in pipetakss via CV)'
 def getClassifier(classifierType):
     if (classifierType == 'SGD'):
-        model = SGDClassifier(penalty='elasticnet',class_weight='auto',n_jobs=-1,n_iter=75,l1_ratio =0.2)
+        model = SGDClassifier(penalty='elasticnet',class_weight='auto',n_jobs=-1,n_iter=150,l1_ratio =0.2)
     if (classifierType == 'LSVC'):
        model = LinearSVC(class_weight='auto')
     if (classifierType == 'forest'):
-        model = RandomForestClassifier(n_jobs=-1, bootstrap=True, n_estimators=500,
+        model = RandomForestClassifier(n_jobs=-1, bootstrap=True, n_estimators=350,
                                         min_samples_leaf=1, min_samples_split =2,
-                                        oob_score=True,max_features='auto',
+                                        oob_score=False,max_features='auto',
                                         criterion='gini')
     if (classifierType == 'SVCrbf'):
        model = SVC(kernel="rbf", class_weight="auto", cache_size=1400, shrinking=True)
@@ -102,6 +102,7 @@ def featureFitting( filename, X, y, featureNames,optimalFlag, kbest=20, alpha=0.
     Reduced_df.to_csv('REDUCED_Feat.csv')
     return Reduced_df
 #
+#Add pickling option + loading option! - DAN
 # @click.command()
 # @click.option('--training_set_file','-tsf','filename',default='.',help='The path to the trainings set dataframe csv')
 # @click.option('--normalize','-n','normFlag',default=False,help='A flag indicating whether to normalize the data', type=bool)
