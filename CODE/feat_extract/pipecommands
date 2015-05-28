@@ -1,7 +1,0 @@
-python pipeline.py --trainingSetDir /cs/prt3/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/Train    --classType file --testingSetDir  /cs/prt3/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/validate_cnidNP --trainFeatures True --testFeatures True --resultsDir /cs/prt3/danofer/NP-Collab/npid_2/datasets/final_collab_2014_npp_trainingsets/validate_cnidNP
-
-
-
-BUG: Inf features may occur (due to standardizer). Remove via ctrl+H ; (LAter will be replaced via train-predict/test feature "matcher"). 
-
-python pipeline.py --trainingSetDir /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/try/alt_NP    --classType file --testingSetDir  /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/try/unknown --trainFeatures True --testFeatures True --resultsDir /cs/prt3/danofer/ProtFeat/feature_extract/test_seq/try/unknown
