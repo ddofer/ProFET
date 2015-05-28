@@ -1,6 +1,5 @@
 __author__ = 'Michael'
 'Modified from Michael doron - 7.8.2014'
-import click
 from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier, \
     GradientBoostingClassifier
 import numpy as np
@@ -13,7 +12,7 @@ from sklearn.lda import LDA
 from sklearn import svm, preprocessing
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 
-from numba.decorators import jit
+#from numba.decorators import jit
 from time import time
 from scipy.stats import randint as sp_randint
 from sklearn.grid_search import RandomizedSearchCV,GridSearchCV
