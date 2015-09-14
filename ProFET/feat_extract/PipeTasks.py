@@ -157,7 +157,7 @@ def GetKFeatures(filename, method='RFE',kbest=30,alpha=0.01, reduceMatrix = True
     Gets the K-best features (filtered by FDR, then select best ranked by t-test , more advanced options can be implemented).
     Save the data/matrix with the resulting/kept features to a new output file, "REDUCED_Feat.csv"
     '''
-    features, labels, lb_encoder,featureNames = load_data(filename, 'file')
+    features, labels, lb_encoder,featureNames = load_data(filename)
     X, y = features, labels
 
     # change the names as ints back to strings

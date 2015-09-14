@@ -35,6 +35,7 @@ from multiprocessing import Pool #Currently unused in multiclass
 from Bio.SeqIO.FastaIO import SimpleFastaParser, FastaIterator, FastaWriter
 import pandas as pd
 import numpy as np
+from collections import OrderedDict
 # from Feature_Extract.AAlphabets import *
 # import Feature_Extract.ProtFeat
 from AAlphabets import *
@@ -183,7 +184,7 @@ def GenFeaturesFromFasta(files=None, Dirr = '.', classType = 'dir'): #, Multicla
               #   sequence = str(record.seq)
 #'Filter out nonstandard sequences: Illegal AA, short, or already processed: '
               #TODO - Seq length limit needs to be made dynamic!!
-              if ((contain_illegals(sequence,ILLEGALS))==False) & (len(sequence)> MIN_PROTEIN_LENGTH) & (all_feature_dict.get(seq_id) is None):
+              if ((contain_illegals(sequence,ILLEGALS))==False) and (len(sequence)> MIN_PROTEIN_LENGTH) and (all_feature_dict.get(seq_id) is None):
                   all_feature_dict[seq_id]=Get_Protein_Feat(sequence)
                   if (classType == 'id'):
                       (all_feature_dict[seq_id])['classname'] = title.split()[1]
@@ -212,7 +213,7 @@ def GenFeaturesFromFasta(files=None, Dirr = '.', classType = 'dir'): #, Multicla
   # print ('returning all_feature_dict')
   return all_feature_dict
 
-def get_reduced_prot (seq,alph_name="ofer14"):
+def get_reduced_prot(seq,alph_name="ofer14"):
   '''
   Given a sequence and name of a reduced a.a set,
   gets the translated, reduced AA version of the sequence, and
@@ -281,7 +282,7 @@ def col_MAD (col):
 #==============================================================================
 
 "http://nbviewer.ipython.org/urls/bitbucket.org/hrojas/learn-pandas/raw/master/lessons/11%20-%20Lesson.ipynb"
-def Get_Dirr_All_Fasta (classType, Dirr = '.'):
+def Get_Dirr_All_Fasta (classType, dir_path='./'):
     '''
     Get all FASTA (*.fasta) files from current working directory,
     returns a list of files.
@@ -293,14 +294,8 @@ def Get_Dirr_All_Fasta (classType, Dirr = '.'):
     We could also do:
     for file in glob("*.fasta"):
     '''
-    if Dirr != '.':
-        os.chdir(str(Dirr))
-        print ("dirr change to: %s" %(Dirr))
-
-    for root, dirs, files in os.walk(Dirr) :
+    for root, dirs, files in os.walk(dir_path) :
         for name in files:
-            'TODO: Add "does not end with .fasta~ '
-            # Original: if (name.endswith('.fasta')):
             if (name.endswith(('.fasta','.fa'))):
                 className = ''
                 if classType == 'dir':
@@ -310,11 +305,8 @@ def Get_Dirr_All_Fasta (classType, Dirr = '.'):
                     className = filename
                 elif classType == 'id':
                     className = 'chooseID'
-#Original: if name.endswith('.fasta'):
-                if name.endswith(('.fasta','.fa')):
-                    files_dict[os.path.join(root, name)] = className
+            files_dict[os.path.join(root, name)] = className
     return files_dict
-
 
 '''
 Alt calcMAD ?:
@@ -404,11 +396,8 @@ def get_features(trainingSetFlag, classType, files=None,returndf = True,saveCSV 
     def get_MultiClass_features(trainingSetFlag, classType):
         fasta_files_dict = Get_Dirr_All_Fasta (classType,Dirr)
 
-        #ORIG 10.11: print ('Multiclass fasta_files list found: %s' %(fasta_files_dict) )
         print ('Multiclass fasta_files list found: %s' %(list(fasta_files_dict) )) #Changed New
-        # i=0
         'Warning: This way is very slow - the Dataframe structure should have its columns created ONCE! TODO - Fix!!'
-        # df = pd.DataFrame() #ORIGINAL
         df = pd.DataFrame(columns=['proteinname','classname']) #CHANGED - Dan
 
         'TODO: Modify this bit, so Mult.files can be sent for processing at once/multiprocessing'
@@ -604,19 +593,6 @@ def filterDF (df,RemoveZeroes=True,RemoveDuplicateCol=False,RemoveNoVarCol=True)
         df_cleaned = df[f.columns[(df != 0).any()]]
         return df_cleaned
 
-
-# import click
-#
-# @click.command()
-# @click.option('--dir','-d','directory',default='.',help='The path to the fasta files', type = str)
-# @click.option('--training_set','-r','trainingSetFlag',default=True,help='Whether this is a training set', type = bool)
-# @click.option('--type_of_class','-c','classType',default='dir',help='Defines the class to each protein by its \
-#                                                                         directory "dir" or by its file name "file"', type = str)
-# @click.option('--normalize','-n','normFlag',default=True,help='Whether to normalize the data', type = bool)
-# @click.option('--normParams','-np','normParams',default='.',help='The path to the csv containing the normalization \
-#                                                                         parameters for the testing data (irrelevant \
-#                                                                         in training data)', type = str)
-
 import params  #What is Params ??? #Dan.
 def featExt(directory, trainingSetFlag, classType, normParams):
 
@@ -674,5 +650,46 @@ def featExt(directory, trainingSetFlag, classType, normParams):
     #"df[df.Name.isin(['cytosol', 'golgi'])]"
     return z_df, normParams
 
+def extract_features(trainingset, outputfeatures):
+#def featExt(directory, trainingSetFlag, classType, normParams):
+
+    df = get_features(trainingSetFlag, classType, returndf = True,
+      saveCSV = False, saveName = "raw_Train_Feat",
+        multiClass=True, Dirr = directory)
+
+    'Remove all zero features. Dan 2015. New'
+    df_cleaned = df[[col for col in df.columns if (df[col].std()>0)]] #NEW Dan
+    df = df_cleaned
+    print("df.shape: ",df.shape)
+    print("df_cleaned shape: ",df_cleaned.shape)
+
+    if params.normalizeTrainingSetFlag == True:
+        if trainingSetFlag == True:
+            z_df, normParams = normalize_zscore(df_cleaned,saveCSV=False,filename='Z+MAD_Feat.csv')
+            normParams.to_csv('trainingSetNormParams.csv')
+        else:
+            print("Loading stored NormParams")
+            normParamDf = pd.read_csv(normParams, index_col=[0])
+            z_df, normParams = normalize_zscore(df_cleaned,saveCSV = False,filename='Z+MAD_Feat.csv',normParams = normParamDf)
+    else:
+        z_df = df_cleaned
+
+    z_df_2 = z_df #NEW
+
+    'Remove sample/sequence names, keep only file names as index'
+    'http://stackoverflow.com/questions/18624039/pandas-reset-index-on-series-to-remove-multiindex'
+    z_df_2.reset_index(0,drop=True,inplace=True) #Keep only class labels
+    if (trainingSetFlag == True):
+        z_df_2.to_csv('trainingSetFeatures.csv')
+    else:
+        z_df_2.to_csv('testingSetFeatures.csv')
+    return z_df, normParams
+
+
 if __name__=="__main__":
-    featExt()
+    #featExt()
+    f = open('../Mamm_Organellas/Mammal_peroxisome9.fasta')
+    record = next(SimpleFastaParser(f))
+    sequence = record[1]
+    d = Get_Protein_Feat(sequence)
+    

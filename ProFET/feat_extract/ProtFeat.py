@@ -39,7 +39,6 @@ from scipy import stats
 # from GetSubSeq import GetSubSequence
 
 from Disorder import getDisordered
-from statistics import mean
 
 """
 AA20 = 'ACDEFGHIKLMNPQRSTVWY' #standard 20 AA Alphabet"

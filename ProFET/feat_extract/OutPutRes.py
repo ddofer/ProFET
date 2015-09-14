@@ -372,7 +372,7 @@ def GetAllPerf (filePaths=None):
 
         # filePath = str(argv[1])
         # X, y, lb_encoder,featureNames = load_data(filePath+fileName, 'file') # X, y = features, labels
-        X, y, lb_encoder,featureNames = load_data(filePath, 'file') # X, y = features, labels
+        X, y, lb_encoder,featureNames = load_data(filePath) # X, y = features, labels
         print(X.shape,"= (samples, features)")
         y_inv = Counter(lb_encoder.inverse_transform(y))
         MajorityPercent = round(100*y_inv.most_common()[0][1]/sum(y_inv.values()),1)

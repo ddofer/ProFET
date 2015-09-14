@@ -101,7 +101,7 @@ def pipeline():
         print('Extracted test data features')
         # dfTesting = pd.DataFrame.from_csv(testingDir+'\\testingSetFeatures.csv') #ORIG
         dfTesting = pd.DataFrame.from_csv(testingDir+'/testingSetFeatures.csv')
-
+        # We use DF training to ensure consistency with features - we just need the feature names.
         dfTraining = pd.io.parsers.read_csv(trainingDir+'/trainingSetFeatures.csv',nrows=2) #Orig.
         # dfTraining =  pd.DataFrame.from_csv(trainingDir+'/trainingSetFeatures.csv') #New
 
